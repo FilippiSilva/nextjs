@@ -1,0 +1,24 @@
+name: Preview Deployment Start
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+jobs:
+  start-preview:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Post comment that preview is starting
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            🚀 Preview deployment is **starting**...
+          token: ${{ secrets.GITHUB_TOKEN }}
+          comment-id: ${{ steps.find-comment.outputs.comment-id }}
+
+      - name: Save comment ID
+        id: save-comment
+        run: |
+          echo "COMMENT_ID=$(jq '.id' <<<"${{ steps.create-comment.outputs.comment }}" )" >> $GITHUB_ENV
