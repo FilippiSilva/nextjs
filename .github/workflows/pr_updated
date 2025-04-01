@@ -1,0 +1,24 @@
+name: Preview Deployment Update
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'Pull Request number'
+        required: true
+      preview_url:
+        description: 'URL do preview gerado'
+        required: true
+
+jobs:
+  update-comment:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Update preview comment on PR
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.inputs.pr_number }}
+          body: |
+            ✅ Preview deployment está **pronto**: [Visualizar Preview](${{ github.event.inputs.preview_url }})
+          token: ${{ secrets.GITHUB_TOKEN }}
